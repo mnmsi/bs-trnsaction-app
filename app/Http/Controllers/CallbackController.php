@@ -12,7 +12,7 @@ class CallbackController extends Controller
     {
         // Validate the request
         $validator = Validator::make($request->all(), [
-            'transaction_id' => 'required|numeric',
+            'transaction_id' => 'required|string',
             'status'         => 'required|string',
         ]);
 
@@ -36,7 +36,7 @@ class CallbackController extends Controller
 
     private function updateTransaction($transactionId, $status)
     {
-        return Transaction::find($transactionId)
+        return Transaction::where('transaction_id', $transactionId)
             ->update([
                 'status' => $status,
             ]);

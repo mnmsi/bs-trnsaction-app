@@ -23,6 +23,8 @@ class PaymentController extends Controller
                 ->json($validator->errors()->toArray(), 422);
         }
 
+        $data = $request->all();
+
         $mockStatus = $this->getMockStatus();
         if ($mockStatus === 0) {
             return response()
@@ -37,7 +39,6 @@ class PaymentController extends Controller
             return response()
                 ->json([
                     'transaction_id' => $data['transaction_id'],
-                    'status'         => $data['status'],
                 ])
                 ->header('Cache-Control', 'no-store');
         }
@@ -62,7 +63,7 @@ class PaymentController extends Controller
     private function getMockStatus()
     {
         $mockResponse = Http::withHeader('X-Mock-Status', 'accepted')
-            ->get('http://localhost:8000/mock-response');
+            ->get('http://localhost:8000/api/mock-response');
 
         if ($mockResponse->successful()) {
             return $mockResponse->json('status');
